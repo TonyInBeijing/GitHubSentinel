@@ -3,6 +3,8 @@
 import threading
 import shlex
 
+import os
+
 from argparse import ArgumentError
 
 from config import Config
@@ -20,7 +22,8 @@ def run_scheduler(scheduler):
 
 def main():
     config = Config()
-    github_client = GitHubClient(config.github_token)
+    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+    github_client = GitHubClient(GITHUB_TOKEN)
     notifier = Notifier(config.notification_settings)
     llm = LLM()
     report_generator = ReportGenerator(llm)
