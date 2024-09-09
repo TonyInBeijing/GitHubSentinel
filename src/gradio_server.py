@@ -1,4 +1,5 @@
 import gradio as gr  # 导入gradio库用于创建GUI
+import os
 
 from config import Config  # 导入配置管理模块
 from github_client import GitHubClient  # 导入用于GitHub API操作的客户端
@@ -9,7 +10,7 @@ from logger import LOG  # 导入日志记录器
 
 # 创建各个组件的实例
 config = Config()
-github_client = GitHubClient(config.github_token)
+github_client = GitHubClient(os.getenv("GITHUB_TOKEN"))
 llm = LLM()
 report_generator = ReportGenerator(llm)
 subscription_manager = SubscriptionManager(config.subscriptions_file)
@@ -33,6 +34,7 @@ demo = gr.Interface(
         # 滑动条选择报告的时间范围
     ],
     outputs=[gr.Markdown(), gr.File(label="下载报告")],  # 输出格式：Markdown文本和文件下载
+    allow_flagging="never"
 )
 
 if __name__ == "__main__":
