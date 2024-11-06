@@ -76,6 +76,22 @@ class ReportGenerator:
         LOG.info(f"Hacker News 每日汇总报告已保存到 {report_file_path}")
         return report, report_file_path
 
+    def generate_gs_resources_report(self, markdown_file_path):
+        """
+        生成 GS Resources 论坛热门帖子的报告，并保存为 {original_filename}_report.md。
+        """
+        with open(markdown_file_path, 'r') as file:
+            markdown_content = file.read()
+
+        system_prompt = self.prompts.get("gs_resources")
+        report = self.llm.generate_report(system_prompt, markdown_content)  
+
+        report_file_path = os.path.splitext(markdown_file_path)[0] + "_report.md"
+        with open(report_file_path, 'w+') as report_file:
+            report_file.write(report)
+
+        LOG.info(f"GS Resources 论坛热门帖子报告已保存到 {report_file_path}")
+        return report, report_file_path
 
     def _aggregate_topic_reports(self, directory_path):
         """
